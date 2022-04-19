@@ -1,0 +1,45 @@
+from itertools import combinations
+
+def is_correct(combi, room_arr):
+    p1 = combi[0]
+    p2 = combi[1]
+    if abs(p1[0] - p2[0]) + abs(p1[1] - p2[1]) > 2:
+        return True
+    else:
+        q = [p1]
+        visited = [[0] * (5) for _ in range(5)]
+        visited[p1[0]][p1[1]] = 1
+        while q:
+            ci, cj = q.pop(0)
+            if (ci, cj) == p2:
+                return False
+            for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                ni, nj = ci + di, cj + dj
+                if 0 <= ni < 5 and 0 <= nj < 5:
+                    if room_arr[ni][nj] != 'X' and visited[ni][nj] == 0:
+                        visited[ni][nj] = visited[ci][cj] + 1
+                        if visited[ni][nj] < 4:
+                            q.append((ni, nj))
+        return True        
+
+def solution(places):
+    ans = []
+    rooms = [[] for _ in range(5)]
+    tmp = 0
+    for place in places:
+        for i in range(5):
+            for j in range(5):
+                if place[i][j] == 'P':
+                    rooms[tmp].append((i, j))
+        tmp += 1
+        temp = 0
+    for room in rooms:
+        cases = combinations(room, 2)
+        for case in cases:
+            if is_correct(case, places[temp]) == False:
+                ans.append(0)
+                break
+        else:
+            ans.append(1)
+        temp += 1
+    return ans
