@@ -1,0 +1,48 @@
+import queue
+
+INF = 90000000
+def dijkstra(n, graph, s, e, traps):
+    q = queue.PriorityQueue()
+    q.put((0, s, 0))
+    visited = [[0] * (1 << len(traps)) for _ in range(n + 1)]
+    while q:
+        distance, now, activate = q.get()
+        if now == e:
+            return distance
+        if visited[now][activate]:
+            continue
+        visited[now][activate] = 1
+
+        now_node = False
+        activated = dict()  # 현재 함정이 발동되어 있는 노드
+        for i in range(len(traps)):
+            if activate & (1 << i):  # 함정이 발동되어 있는 노드 중
+                if traps[i] == now:  # 현재 위치가 있디면 짝수번째 방문했다는 뜻
+                    activate &= ~ (1 << i)  # 함정 발동 안함
+                else:
+                    activated[traps[i]] = True
+            else:  # 함정이 발동되어 있지 않은데
+                if traps[i] == now:  # 현재 노드라면
+                    activate |= (1 << i)
+                    activated[traps[i]] = True  # 함정 발동시키기
+                    now_node = True
+            
+        for v in range(1, n + 1):
+            if v != now: 
+                next_node = True if v in activated else False
+                if now_node == next_node:
+                    if graph[now][v] != INF:
+                        q.put((distance + graph[now][v], v, activate))
+                else:
+                    if graph[v][now] != INF:
+                        q.put((distance + graph[v][now], v, activate))
+
+
+def solution(n, start, end, roads, traps):
+    graph = [[INF] * (n + 1) for _ in range(n + 1)]
+    for i in range(1, n + 1):
+        graph[i][i] = 0
+    for p, q, s in roads:
+        if s < graph[p][q]:
+            graph[p][q] = s
+    return dijkstra(n, graph, start, end, traps)
