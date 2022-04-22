@@ -1,0 +1,43 @@
+def solution(n, k, commends):
+    delete = []
+    node_list = [[i - 1, i + 1, False] for i in range(n)]
+    now = k
+    
+    for command in commends:
+        if command =='C':
+            node_list[now][2] = True
+            delete.append(now)
+            before, after = node_list[now][0], node_list[now][1]
+            if before != -1:
+                node_list[before][1] = after
+            if after != n:
+                node_list[after][0] = before
+                now = after
+            else:
+                now = before
+
+        elif command =='Z':
+            z_node = delete.pop()
+            node_list[z_node][2] = False
+            before = node_list[z_node][0]
+            after = node_list[z_node][1]
+            if before != -1:
+                node_list[before][1] = z_node
+            if after != n:
+                node_list[after][0] = z_node
+
+        else:
+            step = int(command.split()[1])
+            if command.startswith('U'):
+                for _ in range(step):
+                    now = node_list[now][0]
+            else:
+                for _ in range(step):
+                    now = node_list[now][1]
+    ans = ''
+    for i in range(n):
+        if node_list[i][2] == True:  # 삭제된 행
+            ans += 'X'
+        else:
+            ans += 'O'
+    return ans
