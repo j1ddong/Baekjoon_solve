@@ -1,6 +1,7 @@
 import queue
 
-INF = 90000000
+
+INF = 900000000
 def dijkstra(n, graph, s, e, traps):
     q = queue.PriorityQueue()
     q.put((0, s, 0))
@@ -9,9 +10,9 @@ def dijkstra(n, graph, s, e, traps):
         distance, now, activate = q.get()
         if now == e:
             return distance
-        if visited[now][activate]:
+        if visited[now][activate]:  # 방문 한 곳이면 통과
             continue
-        visited[now][activate] = 1
+        visited[now][activate] = 1  # 방문표시
 
         now_node = False
         activated = dict()  # 현재 함정이 발동되어 있는 노드
@@ -40,8 +41,6 @@ def dijkstra(n, graph, s, e, traps):
 
 def solution(n, start, end, roads, traps):
     graph = [[INF] * (n + 1) for _ in range(n + 1)]
-    for i in range(1, n + 1):
-        graph[i][i] = 0
     for p, q, s in roads:
         if s < graph[p][q]:
             graph[p][q] = s
