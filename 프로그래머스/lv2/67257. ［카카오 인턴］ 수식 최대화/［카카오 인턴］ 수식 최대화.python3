@@ -1,0 +1,18 @@
+from itertools import permutations
+
+
+def solution(expression):
+    ans = 0
+    operators = ['*', '+', '-']
+    cases = permutations(operators)
+    for case in cases:  # * + -
+        temp = []
+        first = expression.split(case[2])  # - 추출
+        for elem in first:
+            second = elem.split(case[1])  # + 추출
+            second = [str(eval(x)) for x in second]  # * 계산
+            temp.append(case[1].join(second))  # + 추출된 건 2개로 나눠져서 하나로 다시 합치기
+        temp = [str(eval(elem)) for elem in temp]  # + 계산
+        result = abs(eval(case[2].join(temp)))
+        ans = max(ans, result)
+    return ans
