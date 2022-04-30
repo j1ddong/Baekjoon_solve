@@ -1,0 +1,31 @@
+
+from collections import deque
+
+def solution(board):
+    N = len(board)
+    INF = 90000000000
+    # 0 상 1 하 2 좌 3 우
+    arr = [[[INF] * 4 for _ in range(N)] for _ in range(N)]
+    # (0, 0)에서 모든 방향 0으로 초기화
+    arr[0][0][0] = arr[0][0][1] = arr[0][0][2] = arr[0][0][3] = 0
+    def dijkstra():
+        Q = deque()
+        if not board[0][1]:
+            arr[0][1][3] = 100
+            Q.append((0, 1, 3))
+        if not board[1][0]:
+            arr[1][0][1] = 100
+            Q.append((1, 0, 1))
+        while Q:
+            ci, cj, direction = Q.popleft()
+            for di, dj, d in [(-1, 0, 0), (1, 0, 1), (0, -1, 2), (0, 1, 3)]:
+                ni, nj = ci + di, cj + dj
+                if 0 <= ni < N and 0 <= nj < N and not board[ni][nj]:
+                    temp = 100
+                    if direction != d:
+                        temp += 500
+                    if arr[ni][nj][d] > arr[ci][cj][direction] + temp:
+                        arr[ni][nj][d] = arr[ci][cj][direction] + temp
+                        Q.append((ni, nj, d))
+    dijkstra()
+    return min(arr[N - 1][N - 1])
