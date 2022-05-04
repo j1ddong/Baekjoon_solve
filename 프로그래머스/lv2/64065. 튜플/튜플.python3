@@ -1,0 +1,26 @@
+def solution(s):
+    N_tuple = []
+    temp = []
+    temp_str = ''
+    for elem in s:
+        # if elem == '{':
+        #     flag = 1
+        if elem == '}':
+            if temp_str:
+                temp.append(int(temp_str))
+                temp_str = ''
+            N_tuple.append(temp)
+            temp = []
+        elif elem == ',' and temp_str:
+            temp.append(int(temp_str))
+            temp_str = ''
+        elif elem.isnumeric():
+            temp_str += elem
+    N_tuple.sort(key=lambda n_tuple: len(n_tuple))
+    N = len(N_tuple)
+    ans = [N_tuple[1][0]]
+    for i in range(2, N):
+        for num in N_tuple[i]:
+            if num not in ans:
+                ans.append(num)
+    return ans
