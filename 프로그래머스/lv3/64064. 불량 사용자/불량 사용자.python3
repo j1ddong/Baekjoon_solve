@@ -1,0 +1,29 @@
+def solution(user_ids, banned_ids):
+    possible_id = []
+    temp = []
+    for banned_id in banned_ids:
+        if temp:
+            possible_id.append(temp)
+            temp = []
+        for user_id in user_ids:
+            if len(banned_id) == len(user_id):
+                for i in range(len(banned_id)):
+                    if banned_id[i].isalpha() and banned_id[i] != user_id[i]:
+                        break
+                else:
+                    temp.append(user_id)
+    possible_id.append(temp)
+    ans = []
+    def DFS(s, lst):
+        if s == len(banned_ids):
+            lst = sorted(lst)
+            if lst not in ans:
+                ans.append(lst)
+            return
+        for i in range(len(possible_id[s])):
+            if possible_id[s][i] not in lst:
+                DFS(s + 1, lst + [possible_id[s][i]])
+
+    DFS(0, [])
+    print(possible_id)
+    return len(ans)
