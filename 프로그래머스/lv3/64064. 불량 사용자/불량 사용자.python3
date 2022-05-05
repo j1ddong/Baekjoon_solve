@@ -25,5 +25,4 @@ def solution(user_ids, banned_ids):
                 DFS(s + 1, lst + [possible_id[s][i]])
 
     DFS(0, [])
-    print(possible_id)
     return len(ans)
