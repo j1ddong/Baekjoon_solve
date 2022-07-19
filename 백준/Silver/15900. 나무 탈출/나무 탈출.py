@@ -2,14 +2,13 @@ import sys
 input = sys.stdin.readline
 sys.setrecursionlimit(500000)
 
-
 def dfs(node, cnt):
     global ans
-    if not visited[node]:
-        visited[node] = 1
-        if node != 1 and len(arr[node]) == 1:
-            ans += cnt
-        for elem in arr[node]:
+    visited[node] = 1
+    if node != 1 and len(arr[node]) == 1:
+        ans += cnt
+    for elem in arr[node]:
+        if not visited[elem]:
             dfs(elem, cnt + 1)
 
 
@@ -27,3 +26,4 @@ if ans % 2:
     print('Yes')
 else:
     print('No')
+
