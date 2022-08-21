@@ -16,8 +16,6 @@ def dijkstra(start):
     q = [(0, start)]
     while q:
         cw, current = heappop(q)
-        if check[current] < cw:
-            continue
         for dw, next in roads[current]:
             if check[next] > cw + dw:
                 check[next] = cw + dw
