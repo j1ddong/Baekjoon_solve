@@ -1,11 +1,11 @@
 def solution(begin, target, words):
     length = len(begin)
+		# 글자 변환할 수 없으면 0
     if target not in words:
         return 0
     candidates = [(begin, 0)]
     while candidates:
         candidate, cnt = candidates.pop()
-        print(candidate, cnt)
         for word in words:
             differ = 0
             for i in range(length):
