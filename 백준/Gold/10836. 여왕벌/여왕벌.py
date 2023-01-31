@@ -1,3 +1,6 @@
+import sys
+input = sys.stdin.readline
+
 def grow_one(day):
     i, j = M - 1, 1
     for elem in [0, 1, 2]:
