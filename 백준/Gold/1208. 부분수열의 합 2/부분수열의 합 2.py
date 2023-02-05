@@ -2,69 +2,53 @@ import sys
 from itertools import combinations
 input = sys.stdin.readline
 
-n, s = map(int, input().split())
-arr = list(map(int, input().split()))
 
-# meet in the middle
-arr_1 = arr[:n//2]
-arr_2 = arr[n//2:]
+N, S = map(int, input().split())
+lst = list(map(int, input().split()))
 
-subsum_arr_1 = []
-subsum_arr_2 = []
+# N이 최대 40이므로 나눠서 탐색
+left_arr, right_arr = lst[:N // 2], lst[N // 2:]
 
-for i in range(len(arr_1) + 1):
-    # arr_1에서 0 ~ len(arr_1) + 1개만큼 뽑아 만들 수 있는 부분집합의 합을 구한다.
-    comb_1 = combinations(arr_1, i)
-    for comb in comb_1:
-        subsum_arr_1.append(sum(comb))
+subsum1 = []
+subsum2 = []
 
-for i in range(len(arr_2) + 1):
-    # arr_2에서 0 ~ len(arr_2) + 1개만큼 뽑아 만들 수 있는 부분집합의 합을 구한다.
-    comb_2 = combinations(arr_2, i)
-    for comb in comb_2:
-        subsum_arr_2.append(sum(comb))
+def all_combi_sum(arr, sum_arr):
+    for i in range(len(arr) + 1):
+        combi = combinations(arr, i)
+        for c in combi:
+            sum_arr.append(sum(c))
 
-subsum_arr_1.sort()
-subsum_arr_2.sort()
+all_combi_sum(left_arr, subsum1)
+all_combi_sum(right_arr, subsum2)
 
-left_pointer = 0
-right_pointer = len(subsum_arr_2) - 1
-ans = 0
+subsum1.sort()
+subsum2.sort()
 
-while left_pointer < len(subsum_arr_1) and right_pointer >= 0:
-    tmp = subsum_arr_1[left_pointer] + subsum_arr_2[right_pointer]
+left, right, ans = 0, len(subsum2) - 1, 0
 
-    # 두 포인터가 가르키는 값의 합이 s와 같다면
-    if tmp == s:
-
-        # 부분집합의 합이 같은 경우를 예외처리
-        same_count_left = 1
-        same_count_right = 1
-
-        same_left_idx = left_pointer
-        same_right_idx = right_pointer
-
-        left_pointer += 1
-        right_pointer -= 1
-
-        while left_pointer < len(subsum_arr_1) and subsum_arr_1[left_pointer] == subsum_arr_1[same_left_idx]:
-            same_count_left += 1
-            left_pointer += 1
+while left < len(subsum1) and right >= 0:
+    temp = subsum1[left] + subsum2[right]
+    if temp == S:
+        same_sub_left = 1
+        same_sub_right = 1
         
-        while right_pointer >= 0 and subsum_arr_2[right_pointer] == subsum_arr_2[same_right_idx]:
-            same_count_right += 1
-            right_pointer -= 1
-        
-        ans += same_count_left * same_count_right
-    
-    elif tmp < s:
-        left_pointer += 1
-    
+        left += 1
+        right -= 1
+
+        while left < len(subsum1) and subsum1[left] == subsum1[left - 1]:
+            same_sub_left += 1
+            left += 1
+        while right >= 0 and subsum2[right] == subsum2[right + 1]:
+            same_sub_right += 1
+            right -= 1
+        ans += same_sub_left * same_sub_right
+
+    elif temp < S:
+        left += 1
     else:
-        right_pointer -= 1
+        right -= 1
 
-# 아무것도 뽑지 않는 경우는 고려하지 않으므로, s가 0이라면 해당 경우의 수 1개를 빼준다
-if s == 0:
+if S == 0:
     ans -= 1
-    
+
 print(ans)
